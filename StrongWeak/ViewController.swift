@@ -40,9 +40,14 @@ class ViewController: UIViewController {
 extension ViewController {
     
     func handleTap(sender: UIButton) {
-        
+        print("tapped")
         for label in movieLabels {
+            print("check for tap")
             if button.frame.intersects(label.frame) {
+//                OperationQueue.main.addOperation {
+//                    
+//                }
+                
                 fadeOutLabels()
                 searchFilm(label.text!)
                 break
@@ -59,7 +64,7 @@ extension ViewController {
     }
     
     func fadeOutLabels() {
-        
+        print("Fade out label activated")
         movieLabels.forEach { label in
             UIView.animate(withDuration: 0.8) { _ in
                 label.alpha = 0.0
@@ -69,16 +74,14 @@ extension ViewController {
     }
     
     func display(image: UIImage) {
-        
-        movieImageView.image = image
-        
-        UIView.animate(withDuration: 3.5, delay: 0.0, options: [], animations: {
-            
-            self.movieImageView.alpha = 1.0
-            self.thankYouLabel.alpha = 1.0
-            
-        }) { _ in }
-        
+        OperationQueue.main.addOperation {
+            self.movieImageView.image = image
+            self.button.isHidden = true
+            UIView.animate(withDuration: 3.5, delay: 0.0, options: [], animations: {
+                self.movieImageView.alpha = 1.0
+                self.thankYouLabel.alpha = 1.0
+            }) { _ in }
+        }
     }
     
 }
@@ -88,7 +91,7 @@ extension ViewController {
 extension ViewController {
     
     func searchFilm(_ title: String) {
-        
+        print("search initiated")
         let search = title.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
         
         let string = "http://www.omdbapi.com/?t=\(search)&y=&plot=short&r=json"
@@ -109,8 +112,7 @@ extension ViewController {
             
             let posterURL = URL(string: posterString)!
             
-            self.button.isHidden = true
-            
+
             self.downloadImage(at: posterURL)
             
             }.resume()
